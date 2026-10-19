@@ -1,33 +1,18 @@
 from django.shortcuts import render, redirect
 import pandas as pd
 import plotly.express as px
-import datetime, math, os
-from django.shortcuts import render, redirect
-
-from .models import Location
-from django.views.decorators.csrf import csrf_protect
-
+import math, os
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
-from django.shortcuts import render, redirect
 from .models import SoilAnalysis
 
-from itertools import zip_longest
 from google import genai
 from PIL import Image
-import datetime
 
 import os
 import json
 
 from PIL import Image, UnidentifiedImageError
-
-from django.shortcuts import render
-import os
-import json
-
-from PIL import Image, UnidentifiedImageError
-from django.shortcuts import render
 from django.views.decorators.http import require_http_methods
 
 SOIL_ANALYSIS_PROMPT = """
@@ -207,90 +192,6 @@ def soil_analysis_view(request):
             )
         })
 
-
-@csrf_protect
-def homeView(request):
-    if request.method == 'POST':
-        name = request.POST.get('place')
-        desc = request.POST.get('description')
-        latitude = request.POST.get('latitude')
-        longitude = request.POST.get('longitude')
-        user = request.user
-
-        if 'image' in request.FILES:
-            file = request.FILES['image']
-
-            temp_path = os.path.join('C:\\Users\\harsh\\OneDrive\\Desktop\\SEM4\\EDAI\\static\\temp', file.name)
-            with open(temp_path, 'wb+') as destination:
-                for chunk in file.chunks():
-                    destination.write(chunk)
-
-            try:
-                image = Image.open(temp_path)
-                image_format = image.format.lower()
-                print(image.format)
-                if image_format in ['png','jpg','jpeg']:
-                    #model = YOLO("edai/b.pt")
-                    model = None
-                    print("Before result")
-                    results = model.predict(source=image, stream=True, imgsz=512, show=True)
-                    print("After result")
-                    names = model.names
-                    s=''
-                    flag = False
-                    print(image_format in ['PNG','JPG','JPEG'])
-
-                    for r in results:
-                        for c in r.boxes.cls:
-                            s = s + names[int(c)]
-
-                        if "Dirty" in s and "Clean" not in s:
-                            flag = True
-                            print(s)
-                            s = ''
-                    
-                    if flag:
-                        try:
-                            Location.objects.create(user=user, place=name, latitude=latitude, longitude=longitude, image=file, description=desc, date=datetime.date.today())
-                        except Exception as e:
-                            print(e)
-                        return render(request, 'home.html', {'showAlert':False, 'success':True, 'user':checkUser(request)})
-                    else:
-                        return render(request, 'home.html', {'showAlert':False, 'failure':True, 'user':checkUser(request)})
-                else:
-                    return render(request, 'home.html', {'showAlert':True, 'success':True, 'user':checkUser(request)})
-            
-            except Exception as e:
-                print("in except: ", e)
-                if file.name.split('.')[-1] == 'mp4':
-                    model = YOLO("edai/b.pt")
-                    results = model.predict(source=temp_path, stream=True, imgsz=512, show=False)
-                    names = model.names
-                    s=''
-                    flag = False
-
-                    for r in results:
-                        for c in r.boxes.cls:
-                            s = s + names[int(c)]
-
-                        if "Dirty" in s and "Clean" not in s:
-                            flag = True
-                            print(s)
-                            s = ''
-                    
-                    if flag:
-                        Location.objects.create(user=user, place=name, latitude=latitude, longitude=longitude, video=file, description=desc, date=datetime.date.today)
-                        return render(request, 'home.html', {'showAlert':False, 'success':True, 'user':checkUser(request)})
-                    else:
-                        return render(request, 'home.html', {'showAlert':False, 'failure':True, 'user':checkUser(request)})
-                else:
-                    return render(request, 'home.html', {'showAlert':True, 'success':True, 'user':checkUser(request)})
-
-        return redirect('home')
-
-    return render(request, 'home.html', {'showAlert':False, 'user':checkUser(request)})
-
-
 def mapView(request):
     # Fetch soil analysis records instead of Location records
     soil_records = SoilAnalysis.objects.all()
@@ -344,42 +245,6 @@ def mapView(request):
             "user": checkUser(request),
         },
     )
-
-
-@csrf_protect
-def feedView(request):
-    if request.method == 'POST':
-        long = request.POST.get('long')
-        lat = request.POST.get('lat')
-
-        res = Location.objects.all()
-
-        locations = []
-        for item in res:
-            if haversine(item.latitude,item.longitude,float(lat),float(long)) <= 1000:
-                diff = datetime.datetime.now().date() - item.date
-                item.date_diff = diff.days
-                locations.append(item)
-
-        i = 0
-        length = len(locations)
-        l1, l2, l3 = [], [], []
-
-        for loc in locations:
-            if i < length/3:
-                l1.append(loc)
-            elif i< (2*length)/3:
-                l2.append(loc)
-            else:
-                l3.append(loc)
-            i += 1
-
-        data = zip_longest(l1,l2,l3)
-        return render(request, 'feed.html', {'data':data, 'post':True, 'user':checkUser(request)})
-    
-    else:
-        return render(request, 'feed.html', {'post':False, 'user':checkUser(request)})
-
 
 def contactView(request):
     return render(request, 'contact.html', {'user':checkUser(request)})
@@ -452,20 +317,3 @@ def checkUser(request):
         user = ''
     return user
 
-def test(request):
-    model = YOLO("edai/b.pt")
-    results = model.predict(source="C:/Users/harsh/OneDrive/Desktop/SEM4/EDAI/static/h.jpg", stream=True, imgsz=512, show=False)
-    names = model.names
-    s=''
-
-    for r in results:
-        for c in r.boxes.cls:
-            s = s + names[int(c)]
-
-        if ("helmet" in s or "vest" in s or "human" in s):
-            print(s)
-            s = ''
-
-        else:
-            print("No gears detected")
-    return render(request, 'test.html')
