@@ -1,11 +1,51 @@
-# WaterMapVerify
+🌱 SoilSense - AI-Powered Soil Analysis
 
-It is a Django-based website for classifying water images and videos into Clean Water, Dirty Water, and Irrelevant (e.g. selfies etc.). The application allows users to upload images or videos of any location with contaminated water along with the name of place, geolocation coordinates and description, if any. This project will aid in aggregating a database of polluted water locations and will greatly help the government bodies and NGOs in identifying dirty water places for cleaning.
+SoilSense is a Django-based web application that uses Google's Gemini AI to analyze soil photographs and provide preliminary soil assessments, visible characteristics, possible uses, and recommended laboratory tests.
 
-The web app will help in reducing the overall time taken for cleanliness of polluted water as a lot of time goes in searching for such places, however our designed application will give data of these places instantly. By designing this project, we hope to contribute in more clean water reservoirs and a better living environment for all.
+Features
+AI-powered soil image analysis using Google Gemini.
+Soil type estimation and visual characteristic assessment.
+Soil sample location capture using browser geolocation.
+Interactive geographical maps using Plotly.
+User registration, login, and authentication.
+Soil analysis results stored in a database.
+Tech Stack
+Backend: Python, Django
+AI: Google Gemini API
+Database: SQLite
+Visualization: Plotly, Pandas
+Frontend: HTML, CSS, JavaScript
+Image Processing: Pillow
+Installation
+git clone https://github.com/DishaDandawate/SoilSense.git
+cd SoilSense
+python -m venv venv
+venv\Scripts\activate
+pip install -r requirements.txt
 
-**TECHNOLOGY STACK**
-• HTML -> For designing frontend
-• CSS -> For styling the frontend
-• Django -> For backend logic of the application
-• YOLOv8 -> For water classification model
+
+Create a .env file in the project root:
+
+GEMINI_API_KEY=your_gemini_api_key
+GEMINI_MODEL=gemini-3.5-flash-lite
+DJANGO_SECRET_KEY=your_django_secret_key
+DEBUG=True
+
+
+Ensure .env is listed in .gitignore.
+
+Run database migrations and start the server:
+
+python manage.py migrate
+python manage.py runserver
+
+
+Open http://127.0.0.1:8000/ in your browser.
+
+Note
+
+SoilSense provides preliminary visual assessments only. Laboratory testing is required for reliable measurements of soil pH, nutrients, and contamination.
+
+License
+
+No license has been specified yet.
