@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>SoilSense | Soil Map</title>
+
+    <style>
+        :root {
+            --green: #28643d;
+            --green-dark: #19472b;
+            --green-light: #eaf4e9;
+            --bg: #f5f8f3;
+            --text: #25372b;
+            --muted: #69776c;
+            --border: #dce6da;
+            --white: #fff;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, Helvetica, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+        }
+
+        /* Navigation */
+        header {
+            background: var(--white);
+            border-bottom: 1px solid var(--border);
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+
+        .navbar {
+            max-width: 1150px;
+            min-height: 76px;
+            margin: auto;
+            padding: 12px 24px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 20px;
+        }
+
+        .brand {
+            color: var(--green);
+            font-size: 23px;
+            font-weight: 800;
+            text-decoration: none;
+            white-space: nowrap;
+        }
+
+        .nav-links {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .nav-links a {
+            color: var(--muted);
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 600;
+            padding: 10px 13px;
+            border-radius: 8px;
+            transition: 0.2s;
+        }
+
+        .nav-links a:hover,
+        .nav-links a.active {
+            background: var(--green-light);
+            color: var(--green);
+        }
+
+        .nav-actions {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .user-name {
+            color: var(--muted);
+            font-size: 13px;
+        }
+
+        .btn {
+            display: inline-flex;
+            justify-content: center;
+            align-items: center;
+            padding: 10px 16px;
+            border-radius: 9px;
+            background: var(--green);
+            border: 1px solid var(--green);
+            color: white;
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .btn:hover {
+            background: var(--green-dark);
+            border-color: var(--green-dark);
+        }
+
+        .btn-outline {
+            background: white;
+            color: var(--green);
+            border-color: var(--border);
+        }
+
+        .btn-outline:hover {
+            color: white;
+        }
+
+        /* Main page */
+        .container {
+            max-width: 1200px;
+            margin: auto;
+            padding: 36px 22px 50px;
+        }
+
+        .hero {
+            text-align: center;
+            padding: 20px 10px 28px;
+        }
+
+        .eyebrow {
+            display: inline-block;
+            padding: 6px 13px;
+            border-radius: 30px;
+            background: var(--green-light);
+            color: var(--green);
+            font-size: 12px;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+        }
+
+        h1 {
+            color: var(--green-dark);
+            font-size: clamp(29px, 5vw, 42px);
+            line-height: 1.2;
+            margin: 17px 0 12px;
+        }
+
+        .hero p {
+            max-width: 650px;
+            margin: auto;
+            color: var(--muted);
+            font-size: 15px;
+        }
+
+        /* Map panel */
+        .map-panel {
+            padding: 22px;
+            background: var(--white);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            box-shadow: 0 5px 22px rgba(31, 68, 39, 0.045);
+        }
+
+        .map-heading {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            margin-bottom: 20px;
+        }
+
+        .icon-box {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            width: 46px;
+            height: 46px;
+            border-radius: 12px;
+            background: var(--green-light);
+            font-size: 23px;
+        }
+
+        h2 {
+            margin: 0 0 4px;
+            color: var(--green-dark);
+            font-size: 21px;
+        }
+
+        .subtitle {
+            margin: 0;
+            color: var(--muted);
+            font-size: 13px;
+        }
+
+        .map-content {
+            width: 100%;
+            min-height: 400px;
+            overflow: hidden;
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            background: #fbfcfa;
+        }
+
+        .map-content > div {
+            max-width: 100%;
+        }
+
+        .map-content iframe {
+            max-width: 100%;
+        }
+
+        .map-content img {
+            max-width: 100%;
+        }
+
+        .map-content .plotly-graph-div {
+            width: 100% !important;
+        }
+
+        .map-note {
+            margin-top: 18px;
+            padding: 14px 16px;
+            background: var(--green-light);
+            border-radius: 10px;
+            color: var(--green-dark);
+            font-size: 13px;
+        }
+
+        footer {
+            margin-top: 35px;
+            padding: 23px 15px;
+            background: white;
+            border-top: 1px solid var(--border);
+            text-align: center;
+            color: var(--muted);
+            font-size: 12px;
+        }
+
+        @media (max-width: 850px) {
+            .navbar {
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+
+            .brand {
+                width: 100%;
+                text-align: center;
+            }
+
+            .nav-links {
+                width: 100%;
+                order: 2;
+            }
+
+            .nav-actions {
+                order: 3;
+            }
+        }
+
+        @media (max-width: 520px) {
+            .container {
+                padding: 20px 12px 35px;
+            }
+
+            .navbar {
+                padding: 12px;
+            }
+
+            .nav-links {
+                gap: 2px;
+            }
+
+            .nav-links a {
+                padding: 8px;
+                font-size: 12px;
+            }
+
+            .map-panel {
+                padding: 13px;
+            }
+
+            .map-content {
+                min-height: 300px;
+            }
+
+            .hero p {
+                font-size: 14px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<header>
+    <nav class="navbar">
+        <a class="brand">🌿 SoilSense</a>
+
+        <div class="nav-links">
+            <a href="{% url 'map' %}" class="active">Soil Map</a>
+            <a href="{% url 'soil_analysis' %}">Soil Analysis</a>
+            <a href="{% url 'contact' %}">Contact</a>
+        </div>
+
+        <div class="nav-actions">
+            {% if user.is_authenticated %}
+                <span class="user-name">
+                    Hello, {{ user.first_name|default:user.username }}
+                </span>
+                <a class="btn btn-outline" href="{% url 'logout' %}">
+                    Logout
+                </a>
+            {% else %}
+                <a class="btn btn-outline" href="{% url 'login' %}">
+                    Log In
+                </a>
+                <a class="btn" href="{% url 'register' %}">
+                    Register
+                </a>
+            {% endif %}
+        </div>
+    </nav>
+</header>
+
+<main class="container">
+
+    <section class="hero">
+        <span class="eyebrow">Explore soil samples</span>
+        <h1>Soil Analysis Map 🗺️</h1>
+        <p>
+            Explore the geographical distribution of soil samples
+            analyzed through SoilSense. Select a marker on the map
+            to explore its location and available information.
+        </p>
+    </section>
+
+    <section class="map-panel">
+        <div class="map-heading">
+            <div class="icon-box">📍</div>
+            <div>
+                <h2>Soil Sample Locations</h2>
+                <p class="subtitle">
+                    Geographical overview of recorded soil analyses
+                </p>
+            </div>
+        </div>
+
+        <div class="map-content">
+            {{ plot_html|safe }}
+        </div>
+
+        <div class="map-note">
+            🌱 Map markers depend on saved soil-analysis records with
+            valid latitude and longitude coordinates.
+        </div>
+    </section>
+
+</main>
+
+<footer>
+    SoilSense · Preliminary AI-based soil insights.
+    Visual assessments do not replace laboratory testing.
+</footer>
+
+</body>
+</html>

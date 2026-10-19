@@ -1,0 +1,488 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Contact Us | Soil Analysis</title>
+
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            background: #f4f7f1;
+            color: #24352a;
+            min-height: 100vh;
+        }
+
+        /* Navigation */
+        header {
+            background: #ffffff;
+            padding: 18px 6%;
+            box-shadow: 0 2px 12px #0000000d;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .navbar {
+            max-width: 1200px;
+            margin: auto;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 20px;
+        }
+
+        .brand {
+            color: #28643d;
+            font-size: 21px;
+            font-weight: bold;
+            text-decoration: none;
+            white-space: nowrap;
+        }
+
+        .nav-options {
+            display: flex;
+            align-items: center;
+            gap: 28px;
+            list-style: none;
+        }
+
+        .nav-options a {
+            text-decoration: none;
+            color: #45574a;
+            font-size: 15px;
+            font-weight: 600;
+            transition: color 0.2s;
+        }
+
+        .nav-options a:hover,
+        .nav-options a.active {
+            color: #28643d;
+        }
+
+        .account {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .account p {
+            font-size: 14px;
+            color: #45574a;
+        }
+
+        .nav-button {
+            border: none;
+            border-radius: 7px;
+            padding: 10px 16px;
+            background: #28643d;
+            color: white;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .nav-button:hover {
+            background: #1d4c2d;
+        }
+
+        .register-button {
+            background: #ffffff;
+            border: 1px solid #28643d;
+            color: #28643d;
+        }
+
+        .register-button:hover {
+            background: #edf5ed;
+            color: #1d4c2d;
+        }
+
+        /* Main content */
+        .container {
+            max-width: 1050px;
+            margin: 55px auto;
+            padding: 0 24px;
+        }
+
+        .intro {
+            text-align: center;
+            max-width: 680px;
+            margin: 0 auto 42px;
+        }
+
+        .eyebrow {
+            display: inline-block;
+            padding: 8px 15px;
+            border-radius: 30px;
+            background: #e3efe3;
+            color: #28643d;
+            font-size: 13px;
+            font-weight: bold;
+            margin-bottom: 18px;
+        }
+
+        h1 {
+            color: #28643d;
+            font-size: clamp(32px, 5vw, 44px);
+            margin-bottom: 16px;
+        }
+
+        .intro p {
+            font-size: 16px;
+            line-height: 1.8;
+            color: #647267;
+        }
+
+        /* Contact cards */
+        .contact-grid {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 24px;
+        }
+
+        .contact-card {
+            background: #ffffff;
+            padding: 32px 25px;
+            border: 1px solid #e5ebe3;
+            border-radius: 14px;
+            box-shadow: 0 4px 16px #00000006;
+            text-align: center;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .contact-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 22px #0000000d;
+        }
+
+        .contact-icon {
+            width: 64px;
+            height: 64px;
+            margin: 0 auto 20px;
+            border-radius: 50%;
+            background: #e8f2e8;
+            color: #28643d;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 26px;
+        }
+
+        .contact-card h2 {
+            font-size: 21px;
+            margin-bottom: 12px;
+            color: #28643d;
+        }
+
+        .contact-card p {
+            color: #718075;
+            font-size: 14px;
+            line-height: 1.7;
+            margin-bottom: 12px;
+        }
+
+        .contact-card a {
+            color: #28643d;
+            font-weight: bold;
+            font-size: 16px;
+            text-decoration: none;
+            overflow-wrap: anywhere;
+        }
+
+        .contact-card a:hover {
+            text-decoration: underline;
+        }
+
+        /* Social media */
+        .social-section {
+            background: #ffffff;
+            border: 1px solid #e5ebe3;
+            border-radius: 14px;
+            margin-top: 28px;
+            padding: 32px 20px;
+            text-align: center;
+        }
+
+        .social-section h2 {
+            color: #28643d;
+            font-size: 23px;
+            margin-bottom: 10px;
+        }
+
+        .social-section p {
+            color: #718075;
+            line-height: 1.7;
+            font-size: 15px;
+            margin-bottom: 24px;
+        }
+
+        .social-links {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 16px;
+        }
+
+        .social-link {
+            width: 48px;
+            height: 48px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            background: #edf5ed;
+            color: #28643d;
+            text-decoration: none;
+            font-size: 21px;
+            transition: background 0.2s, color 0.2s,
+                        transform 0.2s;
+        }
+
+        .social-link:hover {
+            background: #28643d;
+            color: #ffffff;
+            transform: translateY(-3px);
+        }
+
+        /* Footer */
+        footer {
+            margin-top: 60px;
+            padding: 25px 20px;
+            background: #ffffff;
+            border-top: 1px solid #e5ebe3;
+            text-align: center;
+            color: #718075;
+            font-size: 13px;
+            line-height: 1.8;
+        }
+
+        footer strong {
+            color: #28643d;
+        }
+
+        /* Mobile responsiveness */
+        @media (max-width: 800px) {
+            header {
+                padding: 16px 5%;
+                position: static;
+            }
+
+            .navbar {
+                flex-direction: column;
+                gap: 18px;
+            }
+
+            .nav-options {
+                justify-content: center;
+                flex-wrap: wrap;
+                gap: 18px;
+            }
+
+            .account {
+                justify-content: center;
+                flex-wrap: wrap;
+            }
+
+            .container {
+                margin-top: 38px;
+            }
+        }
+
+        @media (max-width: 560px) {
+            .contact-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .nav-options {
+                gap: 14px;
+            }
+
+            .nav-options a {
+                font-size: 14px;
+            }
+
+            .contact-card {
+                padding: 27px 18px;
+            }
+
+            .social-section {
+                padding: 28px 16px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Navigation -->
+    <header>
+        <nav class="navbar" aria-label="Main navigation">
+
+            <a class="brand">
+                <i class="fa-solid fa-leaf"></i>
+                Soil Analysis
+            </a>
+
+            <ul class="nav-options">
+                <li>
+                    <a href="{% url 'map' %}">Map</a>
+                </li>
+                <li>
+                    <a href="{% url 'soil_analysis' %}">Soil Analysis</a>
+                </li>
+                <li>
+                    <a href="{% url 'contact' %}" class="active"
+                       aria-current="page">Contact Us</a>
+                </li>
+            </ul>
+
+            <div class="account">
+                {% if user == '' %}
+                    <button class="nav-button register-button"
+                            onclick="window.location.href='{% url 'register' %}'">
+                        Register
+                    </button>
+
+                    <button class="nav-button"
+                            onclick="window.location.href='{% url 'login' %}'">
+                        Log In
+                    </button>
+                {% else %}
+                    <p>
+                        <i class="fa-regular fa-user"></i>
+                        Logged in as {{ user }}
+                    </p>
+
+                    <button class="nav-button"
+                            onclick="window.location.href='{% url 'logout' %}'">
+                        Logout
+                    </button>
+                {% endif %}
+            </div>
+
+        </nav>
+    </header>
+
+    <!-- Contact page -->
+    <main class="container">
+
+        <section class="intro">
+            <span class="eyebrow">
+                <i class="fa-regular fa-comments"></i>
+                WE'RE HERE TO HELP
+            </span>
+
+            <h1>Contact Us</h1>
+
+            <p>
+                Have a question about soil analysis, need technical
+                assistance, or want to suggest an improvement?
+                We'd love to hear from you. Get in touch with our team.
+            </p>
+        </section>
+
+        <section class="contact-grid" aria-label="Contact information">
+
+            <article class="contact-card">
+                <div class="contact-icon">
+                    <i class="fa-regular fa-envelope"></i>
+                </div>
+
+                <h2>Email Us</h2>
+
+                <p>
+                    Send us your questions, feedback, or suggestions.
+                    We'll be happy to hear from you.
+                </p>
+
+                <a href="mailto:soilanalysis@gmail.com">
+                    soilanalysis@gmail.com
+                </a>
+            </article>
+
+            <article class="contact-card">
+                <div class="contact-icon">
+                    <i class="fa-solid fa-phone"></i>
+                </div>
+
+                <h2>Call Us</h2>
+
+                <p>
+                    Need assistance? Contact our team by phone.
+                </p>
+
+                <a href="tel:+91XXXXXXXXXX">
+                    (+91) XXXXXXXXXX
+                </a>
+            </article>
+
+        </section>
+
+        <section class="social-section">
+            <h2>Connect With Us</h2>
+
+            <p>
+                Follow us on social media for updates, information,
+                and more ways to support our project.
+            </p>
+
+            <div class="social-links">
+
+                <!-- Replace # with your actual profile URLs -->
+                <a href="#" class="social-link"
+                   aria-label="Twitter / X"
+                   title="Twitter / X">
+                    <i class="fa-brands fa-x-twitter"></i>
+                </a>
+
+                <a href="#" class="social-link"
+                   aria-label="Instagram"
+                   title="Instagram">
+                    <i class="fa-brands fa-instagram"></i>
+                </a>
+
+                <a href="#" class="social-link"
+                   aria-label="Facebook"
+                   title="Facebook">
+                    <i class="fa-brands fa-facebook-f"></i>
+                </a>
+
+                <a href="#" class="social-link"
+                   aria-label="LinkedIn"
+                   title="LinkedIn">
+                    <i class="fa-brands fa-linkedin-in"></i>
+                </a>
+
+            </div>
+        </section>
+
+    </main>
+
+    <footer>
+        <p>
+            <strong>
+                <i class="fa-solid fa-leaf"></i>
+                Soil Analysis
+            </strong>
+        </p>
+
+        <p>
+            AI-powered preliminary soil assessment for informed decisions.
+        </p>
+
+        <p>&copy; {% now "Y" %} Soil Analysis. All rights reserved.</p>
+    </footer>
+
+</body>
+</html>

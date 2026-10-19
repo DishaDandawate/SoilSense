@@ -1,0 +1,851 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>SoilSense | AI Soil Analysis</title>
+
+    <style>
+        :root {
+            --green: #28643d;
+            --green-dark: #19472b;
+            --green-light: #eaf4e9;
+            --bg: #f5f8f3;
+            --text: #25372b;
+            --muted: #69776c;
+            --border: #dce6da;
+            --white: #ffffff;
+            --danger: #b42318;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, Helvetica, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+        }
+
+        /* Navigation */
+        header {
+            background: var(--white);
+            border-bottom: 1px solid var(--border);
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+
+        .navbar {
+            max-width: 1150px;
+            min-height: 76px;
+            margin: auto;
+            padding: 12px 24px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 20px;
+        }
+
+        .brand {
+            color: var(--green);
+            font-size: 23px;
+            font-weight: 800;
+            text-decoration: none;
+            white-space: nowrap;
+        }
+
+        .nav-links {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .nav-links a {
+            color: var(--muted);
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 600;
+            padding: 10px 13px;
+            border-radius: 8px;
+            transition: 0.2s;
+        }
+
+        .nav-links a:hover,
+        .nav-links a.active {
+            background: var(--green-light);
+            color: var(--green);
+        }
+
+        .nav-actions {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .user-name {
+            font-size: 13px;
+            color: var(--muted);
+        }
+
+        /* Buttons */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            border: none;
+            border-radius: 9px;
+            padding: 11px 17px;
+            background: var(--green);
+            color: white;
+            font-size: 14px;
+            font-weight: 700;
+            text-decoration: none;
+            cursor: pointer;
+            transition: background 0.2s, transform 0.2s;
+        }
+
+        .btn:hover {
+            background: var(--green-dark);
+            transform: translateY(-1px);
+        }
+
+        .btn:disabled {
+            background: #879b8a;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .btn-outline {
+            color: var(--green);
+            background: white;
+            border: 1px solid var(--border);
+        }
+
+        .btn-outline:hover {
+            color: white;
+        }
+
+        /* Page layout */
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 36px 22px 55px;
+        }
+
+        .hero {
+            text-align: center;
+            padding: 20px 10px 28px;
+        }
+
+        .eyebrow {
+            display: inline-block;
+            background: var(--green-light);
+            color: var(--green);
+            border-radius: 30px;
+            padding: 6px 13px;
+            font-size: 12px;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+        }
+
+        h1 {
+            color: var(--green-dark);
+            font-size: clamp(29px, 5vw, 42px);
+            line-height: 1.2;
+            margin: 17px 0 12px;
+        }
+
+        .hero p {
+            color: var(--muted);
+            max-width: 650px;
+            margin: 0 auto;
+            font-size: 16px;
+        }
+
+        .panel {
+            background: var(--white);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 28px;
+            margin: 20px 0;
+            box-shadow: 0 5px 22px rgba(31, 68, 39, 0.045);
+        }
+
+        .panel-heading {
+            display: flex;
+            align-items: flex-start;
+            gap: 14px;
+            margin-bottom: 24px;
+        }
+
+        .icon-box {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            width: 46px;
+            height: 46px;
+            border-radius: 12px;
+            background: var(--green-light);
+            font-size: 23px;
+        }
+
+        h2 {
+            margin: 0 0 5px;
+            color: var(--green-dark);
+            font-size: 22px;
+        }
+
+        h3 {
+            margin: 23px 0 10px;
+            color: var(--green-dark);
+            font-size: 17px;
+        }
+
+        .subtitle {
+            color: var(--muted);
+            font-size: 14px;
+            margin: 0;
+        }
+
+        /* Upload */
+        .upload-box {
+            display: block;
+            padding: 27px 20px;
+            border: 2px dashed #b9cfb9;
+            background: #f9fcf8;
+            border-radius: 12px;
+            text-align: center;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .upload-box:hover {
+            border-color: var(--green);
+            background: #f1f8ef;
+        }
+
+        .upload-icon {
+            font-size: 35px;
+            display: block;
+            margin-bottom: 8px;
+        }
+
+        .upload-box strong {
+            display: block;
+            color: var(--green-dark);
+            font-size: 16px;
+        }
+
+        .upload-box span {
+            display: block;
+            margin-top: 5px;
+            color: var(--muted);
+            font-size: 13px;
+        }
+
+        input[type="file"] {
+            display: block;
+            width: 100%;
+            margin-top: 15px;
+            font-size: 14px;
+        }
+
+        input[type="file"]::file-selector-button {
+            border: 1px solid var(--border);
+            border-radius: 7px;
+            background: white;
+            padding: 8px 12px;
+            margin-right: 10px;
+            cursor: pointer;
+        }
+
+        /* Location */
+        .location-box {
+            margin-top: 27px;
+            padding: 20px;
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            background: #fcfdfb;
+        }
+
+        .location-title {
+            margin: 0 0 5px;
+            font-size: 17px;
+            color: var(--green-dark);
+        }
+
+        .location-description {
+            color: var(--muted);
+            font-size: 13px;
+            margin: 0 0 16px;
+        }
+
+        .status {
+            color: var(--muted);
+            font-size: 13px;
+            margin: 12px 0;
+            overflow-wrap: anywhere;
+        }
+
+        .coordinate-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+            margin-top: 16px;
+        }
+
+        .field label {
+            display: block;
+            margin-bottom: 6px;
+            font-size: 13px;
+            font-weight: 700;
+        }
+
+        .field input {
+            width: 100%;
+            min-width: 0;
+            border: 1px solid var(--border);
+            background: white;
+            border-radius: 8px;
+            padding: 12px;
+            color: var(--text);
+            font-size: 14px;
+        }
+
+        .field input:focus {
+            outline: 2px solid #b9d8b8;
+            border-color: var(--green);
+        }
+
+        .field input[readonly] {
+            background: #f0f3ef;
+            color: #526254;
+        }
+
+        .submit-row {
+            margin-top: 24px;
+        }
+
+        .submit-row .btn {
+            width: 100%;
+            padding: 14px;
+            font-size: 15px;
+        }
+
+        /* Alerts */
+        .alert {
+            padding: 15px 18px;
+            margin: 18px 0;
+            border-radius: 10px;
+            font-size: 14px;
+        }
+
+        .alert-error {
+            color: var(--danger);
+            background: #fff1f0;
+            border: 1px solid #ffd1ce;
+        }
+
+        .alert-success {
+            color: var(--green-dark);
+            background: var(--green-light);
+            border: 1px solid #cce2ca;
+        }
+
+        /* Results */
+        .result-label {
+            display: inline-block;
+            color: var(--green);
+            background: var(--green-light);
+            border-radius: 6px;
+            padding: 5px 9px;
+            font-size: 12px;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .result-type {
+            color: var(--green-dark);
+            font-size: 25px;
+            font-weight: 700;
+            margin: 0 0 20px;
+            overflow-wrap: anywhere;
+        }
+
+        .property-grid {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 12px;
+        }
+
+        .property {
+            padding: 16px;
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            min-width: 0;
+        }
+
+        .property span {
+            display: block;
+            color: var(--muted);
+            font-size: 12px;
+            margin-bottom: 5px;
+        }
+
+        .property strong {
+            display: block;
+            color: var(--text);
+            font-size: 15px;
+            overflow-wrap: anywhere;
+        }
+
+        .result-section {
+            border-top: 1px solid #e9eee7;
+            margin-top: 23px;
+            padding-top: 3px;
+        }
+
+        .result-section ul {
+            padding-left: 22px;
+            margin: 8px 0 18px;
+        }
+
+        .result-section li {
+            margin: 8px 0;
+            padding-left: 3px;
+            overflow-wrap: anywhere;
+        }
+
+        .not-suitable {
+            padding: 18px;
+            border-radius: 10px;
+            background: #fff8e8;
+            color: #78551c;
+            border: 1px solid #f0dfb7;
+        }
+
+        footer {
+            text-align: center;
+            color: var(--muted);
+            font-size: 12px;
+            padding: 25px 10px;
+            border-top: 1px solid var(--border);
+            background: white;
+        }
+
+        @media (max-width: 800px) {
+            .navbar {
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+
+            .brand {
+                width: 100%;
+                text-align: center;
+            }
+
+            .nav-links {
+                order: 2;
+                width: 100%;
+            }
+
+            .nav-actions {
+                order: 3;
+                justify-content: center;
+                flex-wrap: wrap;
+            }
+        }
+
+        @media (max-width: 520px) {
+            .container {
+                padding: 20px 13px 35px;
+            }
+
+            .panel {
+                padding: 19px;
+                border-radius: 12px;
+            }
+
+            .coordinate-grid,
+            .property-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .nav-links {
+                gap: 2px;
+            }
+
+            .nav-links a {
+                padding: 8px;
+                font-size: 12px;
+            }
+
+            .hero p {
+                font-size: 14px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<header>
+    <nav class="navbar">
+        <a class="brand">🌿 SoilSense</a>
+
+        <div class="nav-links">
+            <a href="{% url 'map' %}">Soil Map</a>
+            <a href="{% url 'soil_analysis' %}" class="active">
+                Soil Analysis
+            </a>
+            <a href="{% url 'contact' %}">Contact</a>
+        </div>
+
+        <div class="nav-actions">
+            {% if user.is_authenticated %}
+                <span class="user-name">
+                    Hello, {{ user.first_name|default:user.username }}
+                </span>
+                <a class="btn btn-outline" href="{% url 'logout' %}">
+                    Logout
+                </a>
+            {% else %}
+                <a class="btn btn-outline" href="{% url 'login' %}">
+                    Log In
+                </a>
+                <a class="btn" href="{% url 'register' %}">
+                    Register
+                </a>
+            {% endif %}
+        </div>
+    </nav>
+</header>
+
+<main class="container">
+
+    <section class="hero">
+        <span class="eyebrow">AI-powered soil insights</span>
+        <h1>Understand Your Soil 🌱</h1>
+        <p>
+            Upload a soil photograph to receive a preliminary visual
+            assessment of its appearance, texture, possible uses,
+            and recommended laboratory tests.
+        </p>
+    </section>
+
+    {% if error %}
+        <div class="alert alert-error" role="alert">
+            <strong>Analysis error:</strong> {{ error }}
+        </div>
+    {% endif %}
+
+    <section class="panel">
+        <div class="panel-heading">
+            <div class="icon-box">📷</div>
+            <div>
+                <h2>Analyze a Soil Sample</h2>
+                <p class="subtitle">
+                    Upload a clear, well-lit photograph of the soil.
+                </p>
+            </div>
+        </div>
+
+        <form method="post"
+              enctype="multipart/form-data"
+              id="soilForm">
+
+            {% csrf_token %}
+
+            <label class="upload-box" for="soil_image">
+                <span class="upload-icon">🖼️</span>
+                <strong>Choose your soil photograph</strong>
+                <span>JPG, PNG or WEBP · Maximum 8 MB</span>
+
+                <input type="file"
+                       id="soil_image"
+                       name="soil_image"
+                       accept="image/jpeg,image/png,image/webp"
+                       required>
+            </label>
+
+            <div class="location-box">
+                <h3 class="location-title">📍 Soil Sample Location</h3>
+                <p class="location-description">
+                    Capture the sample coordinates to associate this
+                    analysis with a point on the soil map.
+                </p>
+
+                <button type="button"
+                        class="btn btn-outline"
+                        id="locationButton">
+                    Get My Location
+                </button>
+
+                <p id="locationStatus"
+                   class="status"
+                   aria-live="polite">
+                    Location has not been selected.
+                </p>
+
+                <div class="coordinate-grid">
+                    <div class="field">
+                        <label for="latitude">Latitude</label>
+                        <input type="number"
+                               id="latitude"
+                               name="latitude"
+                               step="any"
+                               min="-90"
+                               max="90"
+                               placeholder="Not captured"
+                               readonly>
+                    </div>
+
+                    <div class="field">
+                        <label for="longitude">Longitude</label>
+                        <input type="number"
+                               id="longitude"
+                               name="longitude"
+                               step="any"
+                               min="-180"
+                               max="180"
+                               placeholder="Not captured"
+                               readonly>
+                    </div>
+                </div>
+            </div>
+
+            <div class="submit-row">
+                <button type="submit"
+                        class="btn"
+                        id="analyzeButton">
+                    🌱 Analyze Soil
+                </button>
+            </div>
+        </form>
+    </section>
+
+    {% if result %}
+        <section class="panel" id="analysisResults">
+            <div class="panel-heading">
+                <div class="icon-box">🔬</div>
+                <div>
+                    <h2>Analysis Results</h2>
+                    <p class="subtitle">
+                        Preliminary visual assessment of your sample
+                    </p>
+                </div>
+            </div>
+
+            {% if result.image_suitable %}
+
+                <span class="result-label">ESTIMATED SOIL CATEGORY</span>
+                <p class="result-type">
+                    {{ result.soil_type_estimate|default:"Unknown" }}
+                </p>
+
+                <div class="property-grid">
+                    <div class="property">
+                        <span>🎨 Visible Color</span>
+                        <strong>{{ result.visible_color|default:"Unknown" }}</strong>
+                    </div>
+
+                    <div class="property">
+                        <span>🪨 Visible Texture</span>
+                        <strong>{{ result.visible_texture|default:"Unknown" }}</strong>
+                    </div>
+
+                    <div class="property">
+                        <span>💧 Visible Moisture</span>
+                        <strong>{{ result.visible_moisture|default:"Unknown" }}</strong>
+                    </div>
+
+                    <div class="property">
+                        <span>🍂 Visible Organic Matter</span>
+                        <strong>{{ result.visible_organic_matter|default:"Unknown" }}</strong>
+                    </div>
+                </div>
+
+                <div class="result-section">
+                    <h3>🔍 Observations</h3>
+                    <ul>
+                        {% for item in result.observations %}
+                            <li>{{ item }}</li>
+                        {% empty %}
+                            <li>No observations available.</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+
+                <div class="result-section">
+                    <h3>🌾 Possible Uses</h3>
+                    <ul>
+                        {% for item in result.possible_uses %}
+                            <li>{{ item }}</li>
+                        {% empty %}
+                            <li>No suggestions available.</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+
+            {% else %}
+                <div class="not-suitable">
+                    <strong>Image not suitable for assessment</strong>
+                    <p>
+                        Please upload a clear photograph showing the
+                        soil surface in good lighting, without excessive
+                        blur or obstruction.
+                    </p>
+                </div>
+            {% endif %}
+
+            <div class="result-section">
+                <h3>🧪 Recommended Tests</h3>
+                <ul>
+                    {% for item in result.recommended_tests %}
+                        <li>{{ item }}</li>
+                    {% empty %}
+                        <li>No tests listed.</li>
+                    {% endfor %}
+                </ul>
+            </div>
+
+            <div class="result-section">
+                <h3>⚠️ Limitations</h3>
+                <ul>
+                    {% for item in result.limitations %}
+                        <li>{{ item }}</li>
+                    {% empty %}
+                        <li>No limitations listed.</li>
+                    {% endfor %}
+                </ul>
+            </div>
+
+            <div class="result-section">
+                <h3>✅ Next Steps</h3>
+                <ul>
+                    {% for item in result.next_steps %}
+                        <li>{{ item }}</li>
+                    {% empty %}
+                        <li>No next steps listed.</li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </section>
+    {% endif %}
+
+</main>
+
+<footer>
+    SoilSense · AI-generated preliminary observations only.
+    Laboratory testing is required for reliable chemical and
+    nutrient measurements.
+</footer>
+
+<script>
+    const locationButton = document.getElementById("locationButton");
+    const locationStatus = document.getElementById("locationStatus");
+    const latitudeInput = document.getElementById("latitude");
+    const longitudeInput = document.getElementById("longitude");
+    const soilForm = document.getElementById("soilForm");
+    const analyzeButton = document.getElementById("analyzeButton");
+    const soilImage = document.getElementById("soil_image");
+
+    locationButton.addEventListener("click", function () {
+        if (!navigator.geolocation) {
+            locationStatus.textContent =
+                "Geolocation is not supported by this browser.";
+            return;
+        }
+
+        locationButton.disabled = true;
+        locationStatus.textContent =
+            "Requesting location permission...";
+
+        navigator.geolocation.getCurrentPosition(
+            function (position) {
+                latitudeInput.value =
+                    position.coords.latitude.toFixed(6);
+
+                longitudeInput.value =
+                    position.coords.longitude.toFixed(6);
+
+                locationStatus.textContent =
+                    "Location captured successfully.";
+
+                locationButton.disabled = false;
+            },
+            function (error) {
+                const messages = {
+                    1: "Location permission denied. Allow location access in your browser settings.",
+                    2: "Your location is currently unavailable.",
+                    3: "Location request timed out. Please try again."
+                };
+
+                locationStatus.textContent =
+                    messages[error.code] ||
+                    "Unable to retrieve your location.";
+
+                locationButton.disabled = false;
+            },
+            {
+                enableHighAccuracy: true,
+                timeout: 15000,
+                maximumAge: 0
+            }
+        );
+    });
+
+    soilImage.addEventListener("change", function () {
+        if (soilImage.files.length > 0) {
+            locationStatus.dataset.imageSelected = "true";
+        }
+    });
+
+    soilForm.addEventListener("submit", function (event) {
+        if (!soilImage.files.length) {
+            event.preventDefault();
+            soilImage.focus();
+            return;
+        }
+
+        const file = soilImage.files[0];
+        const allowedTypes = [
+            "image/jpeg",
+            "image/png",
+            "image/webp"
+        ];
+
+        if (!allowedTypes.includes(file.type)) {
+            event.preventDefault();
+            alert("Please select a JPG, PNG or WEBP image.");
+            return;
+        }
+
+        if (file.size > 8 * 1024 * 1024) {
+            event.preventDefault();
+            alert("Image size must not exceed 8 MB.");
+            return;
+        }
+
+        analyzeButton.disabled = true;
+        analyzeButton.textContent = "Analyzing Soil...";
+    });
+
+    {% if result %}
+        document.getElementById("analysisResults").scrollIntoView({
+            behavior: "smooth",
+            block: "start"
+        });
+    {% endif %}
+</script>
+
+</body>
+</html>
